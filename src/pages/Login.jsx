@@ -18,27 +18,21 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await apiLogin(form); 
+      const res = await apiLogin(form);
 
       if (!res.token) throw new Error("Token not received from server");
+
+      // Store token and user info in localStorage
       localStorage.setItem("token", res.token);
-      const role = res.user.role.toLowerCase();
-      switch (role) {
-        case "staff":
-          navigate("/staff/dashboard");
-          break;
-        case "approver":
-          navigate("/approver/dashboard");
-          break;
-        case "finance":
-          navigate("/finance/dashboard");
-          break;
-        default:
-          navigate("/");
-      }
+      localStorage.setItem("user", JSON.stringify(res.user));
+
+      // Navigate to central redirect route
+      navigate("/dashboard-redirect");
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
-      setError(err.response?.data?.detail || err.message || "Invalid username or password");
+      setError(
+        err.response?.data?.detail || err.message || "Invalid username or password"
+      );
     } finally {
       setLoading(false);
     }
@@ -57,10 +51,14 @@ export default function Login() {
           Welcome Back
         </h2>
 
-        {error && <p className="mb-4 text-center text-red-500 font-medium">{error}</p>}
+        {error && (
+          <p className="mb-4 text-center text-red-500 font-medium">{error}</p>
+        )}
 
         <div className="mb-5">
-          <label className="block mb-1 text-sm font-medium text-gray-700">Username</label>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Username
+          </label>
           <input
             type="text"
             name="username"
@@ -72,7 +70,9 @@ export default function Login() {
         </div>
 
         <div className="mb-5">
-          <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
+          <label className="block mb-1 text-sm font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             name="password"

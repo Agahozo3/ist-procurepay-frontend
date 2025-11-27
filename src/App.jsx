@@ -18,13 +18,36 @@ import RequestDetail from "./pages/RequestDetail";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+// New dashboard redirect component
+const DashboardRedirect = () => {
+  const navigate = require("react-router-dom").useNavigate();
+  React.useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (!userStr) return navigate("/"); // no user, go to login
+
+    const user = JSON.parse(userStr);
+    const roleRoutes = {
+      staff: "/staff/dashboard",
+      approver: "/approver/dashboard",
+      finance: "/finance/dashboard",
+    };
+
+    navigate(roleRoutes[user.role.toLowerCase()] || "/");
+  }, [navigate]);
+
+  return null;
+};
+
 function App() {
   return (
     <Router>
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<Login />} /> 
-        <Route path="/signup" element={<SignUp />} /> 
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* Dashboard redirect after login */}
+        <Route path="/dashboard-redirect" element={<DashboardRedirect />} />
 
         {/* Staff routes */}
         <Route
@@ -137,7 +160,7 @@ function App() {
         />
 
         {/* 404 */}
-        <Route path="*" element={<NotFound />} /> 
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
