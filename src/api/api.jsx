@@ -1,8 +1,9 @@
 import axios from "axios";
 
 // ===== BASE API CONFIG =====
+// Use environment variable for backend URL, fallback to localhost
 const API = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8000/api",
 });
 
 // Attach token automatically
@@ -35,7 +36,6 @@ export const updateRequest = async (id, data) =>
 
 export const getRequests = async () => (await API.get("/requests/")).data;
 export const getRequest = async (id) => (await API.get(`/requests/${id}/`)).data;
-
 
 export const getFilteredRequests = async (status) =>
   (await API.get(`/requests/filtered/?status=${status}`)).data;
