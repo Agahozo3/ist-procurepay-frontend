@@ -20,19 +20,25 @@ export default function Login() {
     try {
       const res = await apiLogin(form);
 
-      if (!res.token) throw new Error("Token not received from server");
+      // Backend returns user + token
+      if (!res.token) {
+        throw new Error("Token not received from server");
+      }
 
-      // Store token and user info in localStorage
+      // Store login data
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
 
-      // Navigate to central redirect route
+      // Redirect to protected route handler
       navigate("/dashboard-redirect");
     } catch (err) {
-      console.error("Login error:", err.response?.data || err.message);
-      setError(
-        err.response?.data?.detail || err.message || "Invalid username or password"
-      );
+      const serverMessage =
+        err?.response?.data?.detail ||
+        err?.response?.data?.message ||
+        err.message ||
+        "Invalid username or password";
+
+      setError(serverMessage);
     } finally {
       setLoading(false);
     }
@@ -41,6 +47,7 @@ export default function Login() {
   return (
     <div className="w-full h-screen bg-blue-100 flex items-center justify-center p-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border border-blue-200">
+
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 rounded-full border-2 border-blue-400 p-1 bg-white flex items-center justify-center">
             <User className="w-16 h-16 text-blue-400" />
@@ -64,7 +71,8 @@ export default function Login() {
             name="username"
             value={form.username}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                       focus:ring-2 focus:ring-blue-400 outline-none"
             placeholder="Enter your username"
           />
         </div>
@@ -78,7 +86,8 @@ export default function Login() {
             name="password"
             value={form.password}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                       focus:ring-2 focus:ring-blue-400 outline-none"
             placeholder="Enter your password"
           />
         </div>
@@ -86,7 +95,9 @@ export default function Login() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-blue-400 hover:bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md transition mb-4 disabled:opacity-50"
+          className="w-full bg-blue-400 hover:bg-blue-500 text-white 
+                     text-lg font-medium py-3 rounded-lg shadow-md transition 
+                     mb-4 disabled:opacity-50"
         >
           {loading ? "Logging in..." : "LOGIN"}
         </button>
@@ -100,6 +111,7 @@ export default function Login() {
             Sign up
           </span>
         </p>
+
       </div>
     </div>
   );
