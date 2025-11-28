@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import StaffDashboard from "./pages/StaffDashboard";
@@ -18,24 +18,43 @@ import RequestDetail from "./pages/RequestDetail";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// New dashboard redirect component
+// Dashboard redirect component with proper role-based routing
 const DashboardRedirect = () => {
-  const navigate = require("react-router-dom").useNavigate();
+  const navigate = useNavigate();
+  
   React.useEffect(() => {
     const userStr = localStorage.getItem("user");
-    if (!userStr) return navigate("/"); // no user, go to login
+    const token = localStorage.getItem("token");
+    
+    if (!userStr || !token) {
+      navigate("/");
+      return;
+    }
 
-    const user = JSON.parse(userStr);
-    const roleRoutes = {
-      staff: "/staff/dashboard",
-      approver: "/approver/dashboard",
-      finance: "/finance/dashboard",
-    };
+    try {
+      const user = JSON.parse(userStr);
+      const roleRoutes = {
+        staff: "/staff/dashboard",
+        approver: "/approver/dashboard",
+        finance: "/finance/dashboard",
+      };
 
-    navigate(roleRoutes[user.role.toLowerCase()] || "/");
+      const targetRoute = roleRoutes[user.role?.toLowerCase()];
+      if (targetRoute) {
+        navigate(targetRoute, { replace: true });
+      } else {
+        console.error("Unknown role:", user.role);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      navigate("/");
+    }
   }, [navigate]);
 
-  return null;
+  return <div>Redirecting...</div>;
 };
 
 function App() {
@@ -48,6 +67,7 @@ function App() {
 
         {/* Dashboard redirect after login */}
         <Route path="/dashboard-redirect" element={<DashboardRedirect />} />
+        <Route path="/dashboard" element={<DashboardRedirect />} />
 
         {/* Staff routes */}
         <Route
