@@ -20,10 +20,15 @@ export default function SignUp() {
 
     try {
       await signup({ username, email, password, role });
+      alert('Account created successfully! Please login.');
       navigate("/");
     } catch (err) {
-      console.error(err);
-      setError("Failed to create account. Please try again.");
+      console.error('Signup error:', err);
+      const errorMessage = err.response?.data?.detail || 
+                          err.response?.data?.message || 
+                          err.response?.data?.error ||
+                          'Failed to create account. Please try again.';
+      setError(errorMessage);
     }
 
     setLoading(false);

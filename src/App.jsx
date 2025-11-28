@@ -178,6 +178,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/finance/approved-requests"
+          element={
+            <ProtectedRoute allowedRoles={["finance"]}>
+              <ApproverReviewedRequests />
+            </ProtectedRoute>
+          }
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

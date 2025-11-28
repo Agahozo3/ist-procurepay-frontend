@@ -22,7 +22,7 @@ export default function FinanceDashboard({ user, onLogout }) {
         <div className="mt-6 flex flex-col md:flex-row gap-6 justify-center">
           <button
             className="bg-white shadow-md px-10 py-5 text-lg rounded-xl border border-blue-300 hover:bg-blue-50"
-            onClick={() => navigate("/approver/reviewed-request")}
+            onClick={() => navigate("/finance/approved-requests")}
           >
             Approved Requests
           </button>
