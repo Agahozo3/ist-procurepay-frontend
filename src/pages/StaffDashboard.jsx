@@ -5,13 +5,14 @@ import WelcomeCard from "../components/WelcomeCard";
 
 export default function StaffDashboard({ user }) {
   const navigate = useNavigate();
-  const currentUser = user || { username: "John Doe", role: "Staff" };
+  const storedUser = JSON.parse(localStorage.getItem("user") || '{}');
+  const currentUser = user || storedUser || { username: "John Doe", role: "Staff" };
 
   return (
     <div className="p-6 min-h-screen bg-blue-100">
       <WelcomeCard username={currentUser.username} role={currentUser.role} />
-         <div className="mt-6 flex justify-center gap-4">
-   <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full max-w-md">
+      <div className="mt-6 flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
           <Button
             className="bg-green-500 hover:bg-green-600"
             onClick={() => navigate("/request/new")}
