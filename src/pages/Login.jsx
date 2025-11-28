@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { login as apiLogin } from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +27,7 @@ export default function Login() {
 
     try {
       console.log('LOGIN - Attempting login for:', form.username);
-      const res = await apiLogin(form);
+      const res = await login(form.username, form.password);
       console.log('LOGIN - Response received:', res);
 
       if (!res.token) {
@@ -35,11 +36,6 @@ export default function Login() {
 
       console.log('LOGIN - User data:', res.user);
       console.log('LOGIN - User role:', res.user.role);
-      
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(res.user));
-      
-      console.log('LOGIN - Data saved to localStorage');
       console.log('LOGIN - Navigating to dashboard-redirect');
 
       // Clear form
