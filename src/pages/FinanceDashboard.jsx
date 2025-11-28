@@ -4,7 +4,8 @@ import WelcomeCard from "../components/WelcomeCard";
 
 export default function FinanceDashboard({ user, onLogout }) {
   const navigate = useNavigate();
-  const currentUser = user || { username: "Finance User", role: "Finance" };
+  const storedUser = JSON.parse(localStorage.getItem("user") || '{}');
+  const currentUser = user || storedUser || { username: "Finance User", role: "Finance" };
 
   return (
     <div className="p-8 min-h-screen bg-blue-100">

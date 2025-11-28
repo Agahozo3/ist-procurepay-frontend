@@ -47,6 +47,7 @@ const DashboardRedirect = () => {
       console.log('User role:', userRole, 'Target route:', targetRoute); // Debug log
       
       if (targetRoute) {
+        console.log('Navigating to:', targetRoute);
         navigate(targetRoute, { replace: true });
       } else {
         console.error("Unknown role:", user.role, "Available roles:", Object.keys(roleRoutes));
