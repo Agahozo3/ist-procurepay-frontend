@@ -33,7 +33,6 @@ const DashboardRedirect = () => {
 
     try {
       const user = JSON.parse(userStr);
-      console.log('User data:', user); // Debug log
       
       const roleRoutes = {
         staff: "/staff/dashboard",
@@ -44,17 +43,12 @@ const DashboardRedirect = () => {
       const userRole = user.role?.toLowerCase()?.trim();
       const targetRoute = roleRoutes[userRole];
       
-      console.log('User role:', userRole, 'Target route:', targetRoute); // Debug log
-      
       if (targetRoute) {
-        console.log('Navigating to:', targetRoute);
         navigate(targetRoute, { replace: true });
       } else {
-        console.error("Unknown role:", user.role, "Available roles:", Object.keys(roleRoutes));
         navigate("/");
       }
     } catch (error) {
-      console.error("Error parsing user data:", error);
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       navigate("/");
