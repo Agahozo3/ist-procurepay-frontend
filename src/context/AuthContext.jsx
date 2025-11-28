@@ -4,9 +4,15 @@ import { login as loginApi } from "../api/api";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null
-  );
+  const [user, setUser] = useState(() => {
+    try {
+      const userData = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      return userData && token ? JSON.parse(userData) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const login = async (username, password) => {
     try {
@@ -33,6 +39,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    window.location.href = "/";
   };
 
   return (
