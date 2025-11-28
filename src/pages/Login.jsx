@@ -25,20 +25,29 @@ export default function Login() {
     setError("");
 
     try {
+      console.log('LOGIN - Attempting login for:', form.username);
       const res = await apiLogin(form);
+      console.log('LOGIN - Response received:', res);
 
       if (!res.token) {
         throw new Error("Token not received from server");
       }
 
+      console.log('LOGIN - User data:', res.user);
+      console.log('LOGIN - User role:', res.user.role);
+      
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
+      
+      console.log('LOGIN - Data saved to localStorage');
+      console.log('LOGIN - Navigating to dashboard-redirect');
 
       // Clear form
       setForm({ username: "", password: "" });
       
       navigate("/dashboard-redirect");
     } catch (err) {
+      console.error('LOGIN - Error:', err);
       const serverMessage =
         err?.response?.data?.detail ||
         err?.response?.data?.message ||

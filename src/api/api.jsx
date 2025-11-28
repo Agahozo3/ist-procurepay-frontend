@@ -32,7 +32,9 @@ API.interceptors.response.use(
 
 // ===== Auth API =====
 export const login = async (data) => {
+  console.log('API - Login request:', data);
   const response = await API.post("/user/auth/login/", data);
+  console.log('API - Login response:', response.data);
   return response.data;
 };
 
