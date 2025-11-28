@@ -33,6 +33,7 @@ const DashboardRedirect = () => {
 
     try {
       const user = JSON.parse(userStr);
+      console.log('DEBUG - User:', user.username, 'Role:', user.role);
       
       const roleRoutes = {
         staff: "/staff/dashboard",
@@ -43,12 +44,17 @@ const DashboardRedirect = () => {
       const userRole = user.role?.toLowerCase()?.trim();
       const targetRoute = roleRoutes[userRole];
       
+      console.log('DEBUG - Target route:', targetRoute);
+      
       if (targetRoute) {
+        console.log('DEBUG - Navigating to:', targetRoute);
         navigate(targetRoute, { replace: true });
       } else {
+        console.log('DEBUG - No route found, redirecting to login');
         navigate("/");
       }
     } catch (error) {
+      console.log('DEBUG - Error:', error);
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       navigate("/");
