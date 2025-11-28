@@ -26,8 +26,10 @@ export default function ApproverPendingApproval() {
       setRequests((prev) =>
         prev.map((r) => (r.id === id ? { ...r, status: "APPROVED" } : r))
       );
+      alert('Request approved successfully!');
     } catch (err) {
       console.error("Failed to approve request:", err);
+      alert('Failed to approve request. Please try again.');
     }
   };
 
@@ -37,8 +39,10 @@ export default function ApproverPendingApproval() {
       setRequests((prev) =>
         prev.map((r) => (r.id === id ? { ...r, status: "REJECTED" } : r))
       );
+      alert('Request rejected successfully!');
     } catch (err) {
       console.error("Failed to reject request:", err);
+      alert('Failed to reject request. Please try again.');
     }
   };
 

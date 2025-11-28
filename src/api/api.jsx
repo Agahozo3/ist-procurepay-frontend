@@ -18,7 +18,10 @@ API.interceptors.request.use((config) => {
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && 
+        (error.response?.data?.detail?.includes('Invalid token') || 
+         error.response?.data?.detail?.includes('Token not found') ||
+         error.response?.data?.detail === 'Authentication credentials were not provided.')) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.location.href = "/";
