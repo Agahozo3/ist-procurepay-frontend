@@ -33,17 +33,23 @@ const DashboardRedirect = () => {
 
     try {
       const user = JSON.parse(userStr);
+      console.log('User data:', user); // Debug log
+      
       const roleRoutes = {
         staff: "/staff/dashboard",
         approver: "/approver/dashboard",
         finance: "/finance/dashboard",
       };
 
-      const targetRoute = roleRoutes[user.role?.toLowerCase()];
+      const userRole = user.role?.toLowerCase()?.trim();
+      const targetRoute = roleRoutes[userRole];
+      
+      console.log('User role:', userRole, 'Target route:', targetRoute); // Debug log
+      
       if (targetRoute) {
         navigate(targetRoute, { replace: true });
       } else {
-        console.error("Unknown role:", user.role);
+        console.error("Unknown role:", user.role, "Available roles:", Object.keys(roleRoutes));
         navigate("/");
       }
     } catch (error) {
