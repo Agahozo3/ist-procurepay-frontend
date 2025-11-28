@@ -32,15 +32,8 @@ API.interceptors.response.use(
 
 // ===== Auth API =====
 export const login = async (data) => {
-  try {
-    console.log('Login request data:', data);
-    const response = await API.post("/user/auth/login/", data);
-    console.log('Login response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Login API error:', error.response?.data || error.message);
-    throw error;
-  }
+  const response = await API.post("/user/auth/login/", data);
+  return response.data;
 };
 
 export const signup = async (data) => {

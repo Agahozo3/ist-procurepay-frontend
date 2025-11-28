@@ -24,10 +24,25 @@ export default function SignUp() {
       navigate("/");
     } catch (err) {
       console.error('Signup error:', err);
-      const errorMessage = err.response?.data?.detail || 
-                          err.response?.data?.message || 
-                          err.response?.data?.error ||
-                          'Failed to create account. Please try again.';
+      console.error('Response data:', err.response?.data);
+      
+      let errorMessage = 'Failed to create account. Please try again.';
+      
+      if (err.response?.data) {
+        const data = err.response.data;
+        if (typeof data === 'string') {
+          errorMessage = data;
+        } else if (data.detail) {
+          errorMessage = data.detail;
+        } else if (data.message) {
+          errorMessage = data.message;
+        } else if (data.error) {
+          errorMessage = data.error;
+        } else {
+          errorMessage = JSON.stringify(data);
+        }
+      }
+      
       setError(errorMessage);
     }
 

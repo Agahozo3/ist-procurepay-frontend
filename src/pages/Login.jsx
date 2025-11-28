@@ -13,23 +13,30 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    if (e) e.preventDefault();
+    
+    if (!form.username || !form.password) {
+      setError("Please enter both username and password");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
     try {
       const res = await apiLogin(form);
 
-      // Backend returns user + token
       if (!res.token) {
         throw new Error("Token not received from server");
       }
 
-      // Store login data
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
 
-      // Redirect to protected route handler
+      // Clear form
+      setForm({ username: "", password: "" });
+      
       navigate("/dashboard-redirect");
     } catch (err) {
       const serverMessage =
@@ -92,15 +99,17 @@ export default function Login() {
           />
         </div>
 
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full bg-blue-400 hover:bg-blue-500 text-white 
-                     text-lg font-medium py-3 rounded-lg shadow-md transition 
-                     mb-4 disabled:opacity-50"
-        >
-          {loading ? "Logging in..." : "LOGIN"}
-        </button>
+        <form onSubmit={handleLogin}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-400 hover:bg-blue-500 text-white 
+                       text-lg font-medium py-3 rounded-lg shadow-md transition 
+                       mb-4 disabled:opacity-50"
+          >
+            {loading ? "Logging in..." : "LOGIN"}
+          </button>
+        </form>
 
         <p className="text-center text-sm text-gray-600">
           Don't have an account?{" "}
